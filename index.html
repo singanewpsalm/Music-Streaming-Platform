@@ -1,0 +1,1096 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Sing A New Psalm - Christian Music Streaming</title>
+    <meta name="description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary"/>
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Sing A New Psalm - Christian Music Streaming"/>
+    <meta property="og:description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary"/>
+    <meta property="og:url" content="https://www.onspace.ai"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="OnSpace.AI"/>
+    <meta property="og:image" content="https://cdn-ai.onspace.ai/onspace/project/screenshot/pre-site/9b1inu.jpg"/>
+    <meta property="og:image:width" content="1200"/>
+    <meta property="og:image:height" content="630"/>
+    
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="Sing A New Psalm - Christian Music Streaming"/>
+    <meta name="twitter:description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary"/>
+    <meta name="twitter:image" content="https://cdn-ai.onspace.ai/onspace/project/screenshot/pre-site/9b1inu.jpg"/>
+    <meta name="twitter:url" content="https://www.onspace.ai"/>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#191414',
+                        accent: '#A78BFA',
+                        gold: '#F59E0B'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .song-item:hover {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(167, 139, 250, 0.05) 100%);
+        }
+        
+        .play-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .progress-bar {
+            background: linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%);
+        }
+        
+        .upload-area {
+            border: 2px dashed #8B5CF6;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-area:hover {
+            border-color: #A78BFA;
+            background: rgba(139, 92, 246, 0.05);
+        }
+        
+        .upload-area.dragover {
+            border-color: #A78BFA;
+            background: rgba(139, 92, 246, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .current-song {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(167, 139, 250, 0.1) 100%);
+        }
+        
+        .genre-tab {
+            transition: all 0.3s ease;
+        }
+        
+        .genre-tab.active {
+            background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+            color: white;
+        }
+        
+        .genre-tab:not(.active):hover {
+            background: rgba(139, 92, 246, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <!-- Header -->
+    <header class="bg-secondary border-b border-gray-800 sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                        <i class="fas fa-cross text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                            Sing A New Psalm
+                        </h1>
+                        <p class="text-sm text-gray-400">Christian Music Streaming</p>
+                    </div>
+                </div>
+                
+                <!-- YouTube Channel Link -->
+                <div class="flex items-center space-x-4">
+                    <a href="https://www.youtube.com/@singanewpsalm" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors duration-200 group">
+                        <i class="fab fa-youtube text-white text-xl group-hover:scale-110 transition-transform duration-200"></i>
+                        <span class="text-white font-medium hidden sm:inline">YouTube Channel</span>
+                    </a>
+                </div>
+                <!-- Builder Mode Toggle (only visible in builder) -->
+                <div id="builderControls" class="hidden">
+                    <button id="toggleUpload" class="bg-primary hover:bg-accent px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                        <i class="fas fa-plus mr-2"></i>Add Songs
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Upload Section (only visible in builder mode) -->
+    <section id="uploadSection" class="hidden bg-gray-800 border-b border-gray-700">
+        <div class="container mx-auto px-4 py-6">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-cloud-upload-alt mr-2 text-primary"></i>
+                    Upload New Songs to <span id="uploadGenreTitle" class="text-primary font-bold ml-1">Christian Rap</span>
+                </h2>
+                
+                <!-- File Upload Area -->
+                <div id="uploadArea" class="upload-area rounded-lg p-8 text-center mb-4">
+                    <i class="fas fa-cloud-upload-alt text-4xl text-primary mb-4"></i>
+                    <p class="text-lg font-medium mb-2">Drop MP3 files here or click to browse</p>
+                    <p class="text-gray-400 text-sm">Supports MP3 files up to 50MB each</p>
+                    <input type="file" id="fileInput" multiple="" accept=".mp3,audio/mpeg" class="hidden"/>
+                </div>
+                
+                <!-- Upload Progress -->
+                <div id="uploadProgress" class="hidden">
+                    <div class="bg-gray-700 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium">Processing files...</span>
+                            <span id="progressText" class="text-sm text-gray-400">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-600 rounded-full h-2">
+                            <div id="progressBar" class="progress-bar h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Storage Warning -->
+                <div id="storageWarning" class="hidden bg-yellow-900 border border-yellow-600 rounded-lg p-4 mt-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-exclamation-triangle text-yellow-400 mr-2"></i>
+                        <span class="text-sm">Storage space is getting low. Consider removing some songs.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <!-- Genre Tabs -->
+        <div class="mb-8">
+            <div class="flex flex-wrap gap-2 mb-6">
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium active" data-genre="christian-rap">
+                    <i class="fas fa-microphone mr-2"></i>Christian Rap
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="christian-rock">
+                    <i class="fas fa-guitar mr-2"></i>Christian Rock
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="christian-edm">
+                    <i class="fas fa-music mr-2"></i>Christian EDM
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="christian-contemporary">
+                    <i class="fas fa-heart mr-2"></i>Christian Contemporary
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="gospel">
+                    <i class="fas fa-church mr-2"></i>Gospel Music
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="psalms">
+                    <i class="fas fa-scroll mr-2"></i>Psalms
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="orthodox-praise">
+                    <i class="fas fa-cross mr-2"></i>Orthodox Praise
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="sermons">
+                    <i class="fas fa-bible mr-2"></i>Sermons
+                </button>
+            </div>
+            
+            <!-- Current Genre Title -->
+            <div class="text-center mb-6">
+                <h2 id="genreTitle" class="text-4xl font-bold mb-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                    Christian Rap
+                </h2>
+                <p class="text-gray-400" id="genreDescription">Uplifting rap music with Christian themes and messages</p>
+            </div>
+        </div>
+
+        <!-- Song List -->
+        <div class="bg-gray-800 rounded-xl overflow-hidden shadow-2xl">
+            <div id="songList" class="divide-y divide-gray-700">
+                <!-- Songs will be loaded here -->
+            </div>
+            
+            <!-- Empty State -->
+            <div id="emptyState" class="text-center py-16 px-4">
+                <i class="fas fa-music text-6xl text-gray-600 mb-4"></i>
+                <h3 class="text-xl font-semibold text-gray-400 mb-2">No songs yet</h3>
+                <p class="text-gray-500" id="emptyStateText">Your playlist will appear here once songs are added.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Audio Player -->
+    <div id="audioPlayer" class="fixed bottom-0 left-0 right-0 bg-secondary border-t border-gray-800 p-4 transform translate-y-full transition-transform duration-300">
+        <div class="container mx-auto">
+            <div class="flex items-center space-x-4">
+                <!-- Song Info -->
+                <div class="flex items-center space-x-3 flex-1 min-w-0">
+                    <img id="playerCover" src="" alt="Song cover" class="w-12 h-12 rounded-lg object-cover"/>
+                    <div class="min-w-0 flex-1">
+                        <h4 id="playerTitle" class="font-medium truncate">Song Title</h4>
+                        <p id="playerArtist" class="text-sm text-gray-400 truncate">Sing A New Psalm</p>
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <div class="flex items-center space-x-4">
+                    <button id="prevBtn" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button id="playPauseBtn" class="play-button bg-primary hover:bg-accent w-12 h-12 rounded-full flex items-center justify-center">
+                        <i class="fas fa-play text-lg"></i>
+                    </button>
+                    <button id="nextBtn" class="text-gray-400 hover:text-white transition-colors">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+                
+                <!-- Progress -->
+                <div class="flex items-center space-x-3 flex-1">
+                    <span id="currentTime" class="text-sm text-gray-400 min-w-0">0:00</span>
+                    <div class="flex-1 bg-gray-600 rounded-full h-1 cursor-pointer" id="progressContainer">
+                        <div id="progress" class="progress-bar h-1 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <span id="duration" class="text-sm text-gray-400 min-w-0">0:00</span>
+                </div>
+                
+                <!-- Volume -->
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-volume-up text-gray-400"></i>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="100" class="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Audio Element -->
+    <audio id="audioElement" preload="metadata"></audio>
+
+    <script>
+        class ChristianMusicPlayer {
+            constructor() {
+                // Initialize Supabase
+                this.supabase = supabase.createClient(
+                    'https://afybrkykrkzjmalogimk.supabase.co',
+                    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmeWJya3lrcmt6am1hbG9naW1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzMDM0NjIsImV4cCI6MjA3MDg3OTQ2Mn0.9X2KbY3gR2bUUgvoEkyMErWslb0y0T3dKU-0nVb-nTQ'
+                );
+                
+                                                                this.genres = {
+                    'christian-rap': {
+                        title: 'Christian Rap',
+                        description: 'Uplifting rap music with Christian themes and messages',
+                        icon: 'fas fa-microphone',
+                        songs: []
+                    },
+                    'christian-rock': {
+                        title: 'Christian Rock',
+                        description: 'Powerful rock music celebrating faith and worship',
+                        icon: 'fas fa-guitar',
+                        songs: []
+                    },
+                    'christian-edm': {
+                        title: 'Christian EDM',
+                        description: 'Electronic dance music with uplifting Christian messages',
+                        icon: 'fas fa-music',
+                        songs: []
+                    },
+                    'christian-contemporary': {
+                        title: 'Christian Contemporary',
+                        description: 'Modern worship and contemporary Christian music',
+                        icon: 'fas fa-heart',
+                        songs: []
+                    },
+                    'gospel': {
+                        title: 'Gospel Music',
+                        description: 'Traditional and contemporary gospel music for inspiration and worship',
+                        icon: 'fas fa-church',
+                        songs: []
+                    },
+                    'psalms': {
+                        title: 'Psalms',
+                        description: 'Biblical psalms set to music for worship and meditation',
+                        icon: 'fas fa-scroll',
+                        songs: []
+                    },
+                    'orthodox-praise': {
+                        title: 'Orthodox Praise',
+                        description: 'Traditional Orthodox Christian hymns and liturgical music',
+                        icon: 'fas fa-cross',
+                        songs: []
+                    },
+                    'sermons': {
+                        title: 'Sermons',
+                        description: 'Inspiring sermons and teachings for spiritual growth',
+                        icon: 'fas fa-bible',
+                        songs: []
+                    }
+                };
+                
+                this.currentGenre = 'christian-rap';
+                this.currentSongIndex = -1;
+                this.isPlaying = false;
+                this.audio = document.getElementById('audioElement');
+                this.isBuilderMode = this.detectBuilderMode();
+                this.isLoading = false;
+                
+                this.initializeElements();
+                this.setupEventListeners();
+                this.loadSongs();
+                this.updateBuilderUI();
+            }
+            
+            detectBuilderMode() {
+                return window.location.search.includes('builder=true') || 
+                       localStorage.getItem('builderMode') === 'true' ||
+                       window.parent !== window;
+            }
+            
+            initializeElements() {
+                this.songList = document.getElementById('songList');
+                this.emptyState = document.getElementById('emptyState');
+                this.audioPlayer = document.getElementById('audioPlayer');
+                this.playPauseBtn = document.getElementById('playPauseBtn');
+                this.prevBtn = document.getElementById('prevBtn');
+                this.nextBtn = document.getElementById('nextBtn');
+                this.progressContainer = document.getElementById('progressContainer');
+                this.progress = document.getElementById('progress');
+                this.currentTimeEl = document.getElementById('currentTime');
+                this.durationEl = document.getElementById('duration');
+                this.volumeSlider = document.getElementById('volumeSlider');
+                this.playerCover = document.getElementById('playerCover');
+                this.playerTitle = document.getElementById('playerTitle');
+                this.playerArtist = document.getElementById('playerArtist');
+                this.genreTitle = document.getElementById('genreTitle');
+                this.genreDescription = document.getElementById('genreDescription');
+                this.uploadGenreTitle = document.getElementById('uploadGenreTitle');
+                
+                // Builder elements
+                this.builderControls = document.getElementById('builderControls');
+                this.uploadSection = document.getElementById('uploadSection');
+                this.toggleUploadBtn = document.getElementById('toggleUpload');
+                this.uploadArea = document.getElementById('uploadArea');
+                this.fileInput = document.getElementById('fileInput');
+                this.uploadProgress = document.getElementById('uploadProgress');
+                this.progressBar = document.getElementById('progressBar');
+                this.progressText = document.getElementById('progressText');
+                this.storageWarning = document.getElementById('storageWarning');
+            }
+            
+            updateBuilderUI() {
+                if (this.isBuilderMode) {
+                    this.builderControls.classList.remove('hidden');
+                    document.getElementById('emptyStateText').textContent = 
+                        'Click "Add Songs" to upload your first MP3 files to this genre.';
+                }
+            }
+            
+            setupEventListeners() {
+                // Audio events
+                this.audio.addEventListener('loadedmetadata', () => this.updateDuration());
+                this.audio.addEventListener('timeupdate', () => this.updateProgress());
+                this.audio.addEventListener('ended', () => this.nextSong());
+                this.audio.addEventListener('error', (e) => this.handleAudioError(e));
+                
+                // Control events
+                this.playPauseBtn.addEventListener('click', () => this.togglePlayPause());
+                this.prevBtn.addEventListener('click', () => this.prevSong());
+                this.nextBtn.addEventListener('click', () => this.nextSong());
+                this.progressContainer.addEventListener('click', (e) => this.seekTo(e));
+                this.volumeSlider.addEventListener('input', (e) => this.setVolume(e.target.value));
+                
+                // Genre tab events
+                document.querySelectorAll('.genre-tab').forEach(tab => {
+                    tab.addEventListener('click', () => this.switchGenre(tab.dataset.genre));
+                });
+                
+                if (this.isBuilderMode) {
+                    // Builder mode events
+                    this.toggleUploadBtn.addEventListener('click', () => this.toggleUploadSection());
+                    this.uploadArea.addEventListener('click', () => this.fileInput.click());
+                    this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
+                    
+                    // Drag and drop
+                    this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
+                    this.uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
+                    this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
+                }
+            }
+            
+            switchGenre(genreKey) {
+                this.currentGenre = genreKey;
+                const genre = this.genres[genreKey];
+                
+                // Update active tab
+                document.querySelectorAll('.genre-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.querySelector(`[data-genre="${genreKey}"]`).classList.add('active');
+                
+                // Update genre title and description
+                this.genreTitle.textContent = genre.title;
+                this.genreDescription.textContent = genre.description;
+                this.uploadGenreTitle.textContent = genre.title;
+                
+                // Reset current song if switching genres
+                if (this.currentSongIndex !== -1) {
+                    this.audio.pause();
+                    this.currentSongIndex = -1;
+                    this.isPlaying = false;
+                    this.updatePlayButton();
+                }
+                
+                this.renderSongList();
+            }
+            
+            async loadSongs() {
+                this.isLoading = true;
+                try {
+                    // Fetch songs from Supabase
+                    const { data: songs, error } = await this.supabase
+                        .from('songs')
+                        .select('*')
+                        .order('created_at', { ascending: true });
+                    
+                    if (error) {
+                        console.error('Error fetching songs:', error);
+                        return;
+                    }
+                    
+                    // Clear existing songs
+                    Object.keys(this.genres).forEach(genreKey => {
+                        this.genres[genreKey].songs = [];
+                    });
+                    
+                    // Group songs by genre
+                    if (songs && songs.length > 0) {
+                        songs.forEach(song => {
+                            if (this.genres[song.genre]) {
+                                this.genres[song.genre].songs.push(song);
+                            }
+                        });
+                    }
+                    
+                } catch (error) {
+                    console.error('Error loading songs:', error);
+                } finally {
+                    this.isLoading = false;
+                    this.renderSongList();
+                }
+            }
+            
+            renderSongList() {
+                const currentSongs = this.genres[this.currentGenre].songs;
+                
+                if (this.isLoading) {
+                    this.songList.innerHTML = `
+                        <div class="text-center py-16 px-4">
+                            <i class="fas fa-spinner fa-spin text-4xl text-primary mb-4"></i>
+                            <p class="text-gray-400">Loading songs...</p>
+                        </div>
+                    `;
+                    this.emptyState.classList.add('hidden');
+                    return;
+                }
+                
+                if (currentSongs.length === 0) {
+                    this.songList.innerHTML = '';
+                    this.emptyState.classList.remove('hidden');
+                    return;
+                }
+                
+                this.emptyState.classList.add('hidden');
+                
+                this.songList.innerHTML = currentSongs.map((song, index) => `
+                    <div class="song-item flex items-center p-4 hover:bg-gray-700 transition-colors duration-200 cursor-pointer group ${this.currentSongIndex === index ? 'current-song' : ''}" data-index="${index}">
+                        <div class="relative mr-4">
+                            <img src="${song.cover_url || `https://picsum.photos/seed/${song.id}/300/300.webp`}" alt="${song.title}" class="w-16 h-16 rounded-lg object-cover">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <button class="play-btn w-8 h-8 bg-primary rounded-full flex items-center justify-center hover:bg-accent transition-colors">
+                                    <i class="fas ${this.currentSongIndex === index && this.isPlaying ? 'fa-pause' : 'fa-play'} text-sm text-white ${this.currentSongIndex === index && this.isPlaying ? '' : 'ml-0.5'}"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-medium text-white truncate">${song.title}</h3>
+                            <p class="text-sm text-gray-400 truncate">${song.artist}</p>
+                        </div>
+                        
+                                                <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-400">${this.formatDuration(song.duration || 0)}</span>
+                                                                                    <button class="download-btn p-2 text-gray-400 hover:text-primary transition-colors" data-index="${index}" title="Download song">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <a href="https://buy.stripe.com/6oUfZif7X2c82Lwb3x7AI04" target="_blank" rel="noopener noreferrer" class="donate-btn p-2 text-gray-400 hover:text-gold transition-colors" title="Support us with a donation">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                            ${this.isBuilderMode ? `
+                                <button class="delete-btn p-2 text-gray-400 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100" data-index="${index}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Add event listeners
+                this.songList.querySelectorAll('.song-item').forEach(item => {
+                    item.addEventListener('click', (e) => {
+                        if (!e.target.closest('.delete-btn') && !e.target.closest('.download-btn')) {
+                            this.playSong(parseInt(item.dataset.index));
+                        }
+                    });
+                });
+                
+                // Add download event listeners
+                this.songList.querySelectorAll('.download-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.downloadSongFree(parseInt(btn.dataset.index));
+                    });
+                });
+                
+                if (this.isBuilderMode) {
+                    this.songList.querySelectorAll('.delete-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            this.deleteSong(parseInt(btn.dataset.index));
+                        });
+                    });
+                }
+            }
+            
+            async playSong(index) {
+                const currentSongs = this.genres[this.currentGenre].songs;
+                if (index < 0 || index >= currentSongs.length) return;
+                
+                const song = currentSongs[index];
+                
+                try {
+                    this.currentSongIndex = index;
+                    
+                    // Get the public URL for the song file
+                    const { data } = this.supabase
+                        .storage
+                        .from('songs')
+                        .getPublicUrl(song.file_path);
+                    
+                    this.audio.src = data.publicUrl;
+                    this.playerCover.src = song.cover_url || `https://picsum.photos/seed/${song.id}/300/300.webp`;
+                    this.playerTitle.textContent = song.title;
+                    this.playerArtist.textContent = song.artist;
+                    
+                    await this.audio.play();
+                    this.isPlaying = true;
+                    this.updatePlayButton();
+                    this.showPlayer();
+                    this.renderSongList();
+                    
+                } catch (error) {
+                    console.error('Error playing audio:', error);
+                    alert('Error playing this song. Please check your connection.');
+                }
+            }
+            
+            togglePlayPause() {
+                const currentSongs = this.genres[this.currentGenre].songs;
+                
+                if (this.currentSongIndex === -1) {
+                    if (currentSongs.length > 0) {
+                        this.playSong(0);
+                    }
+                    return;
+                }
+                
+                if (this.isPlaying) {
+                    this.audio.pause();
+                    this.isPlaying = false;
+                } else {
+                    this.audio.play().then(() => {
+                        this.isPlaying = true;
+                    }).catch(err => {
+                        console.error('Error playing audio:', err);
+                    });
+                }
+                
+                this.updatePlayButton();
+                this.renderSongList();
+            }
+            
+            prevSong() {
+                if (this.currentSongIndex > 0) {
+                    this.playSong(this.currentSongIndex - 1);
+                }
+            }
+            
+            nextSong() {
+                const currentSongs = this.genres[this.currentGenre].songs;
+                if (this.currentSongIndex < currentSongs.length - 1) {
+                    this.playSong(this.currentSongIndex + 1);
+                } else if (currentSongs.length > 0) {
+                    this.playSong(0); // Loop back to first song
+                }
+            }
+            
+            updatePlayButton() {
+                const icon = this.playPauseBtn.querySelector('i');
+                icon.className = this.isPlaying ? 'fas fa-pause text-lg' : 'fas fa-play text-lg';
+            }
+            
+            updateDuration() {
+                const duration = this.audio.duration;
+                this.durationEl.textContent = this.formatTime(duration);
+            }
+            
+            updateProgress() {
+                const progress = (this.audio.currentTime / this.audio.duration) * 100;
+                this.progress.style.width = `${progress}%`;
+                this.currentTimeEl.textContent = this.formatTime(this.audio.currentTime);
+            }
+            
+            seekTo(e) {
+                const rect = this.progressContainer.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                this.audio.currentTime = pos * this.audio.duration;
+            }
+            
+            setVolume(value) {
+                this.audio.volume = value / 100;
+            }
+            
+            showPlayer() {
+                this.audioPlayer.classList.remove('translate-y-full');
+                document.body.style.paddingBottom = '100px';
+            }
+            
+            handleAudioError(e) {
+                console.error('Audio error:', e);
+                alert('Error playing audio. The file may be corrupted or unavailable.');
+            }
+            
+            formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            formatDuration(seconds) {
+                return this.formatTime(seconds);
+            }
+            
+            // Builder Mode Methods
+            toggleUploadSection() {
+                this.uploadSection.classList.toggle('hidden');
+            }
+            
+            handleDragOver(e) {
+                e.preventDefault();
+                this.uploadArea.classList.add('dragover');
+            }
+            
+            handleDragLeave(e) {
+                e.preventDefault();
+                this.uploadArea.classList.remove('dragover');
+            }
+            
+            handleDrop(e) {
+                e.preventDefault();
+                this.uploadArea.classList.remove('dragover');
+                const files = Array.from(e.dataTransfer.files).filter(file => 
+                    file.type === 'audio/mpeg' || file.name.toLowerCase().endsWith('.mp3')
+                );
+                this.processFiles(files);
+            }
+            
+            handleFileSelect(e) {
+                const files = Array.from(e.target.files);
+                this.processFiles(files);
+                e.target.value = '';
+            }
+            
+            async processFiles(files) {
+                if (files.length === 0) return;
+                
+                this.showUploadProgress();
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const progress = ((i + 1) / files.length) * 100;
+                    
+                    this.updateUploadProgress(progress, `Processing ${file.name}...`);
+                    
+                    try {
+                        await this.uploadSongToSupabase(file);
+                    } catch (error) {
+                        console.error('Error processing file:', error);
+                        alert(`Error processing ${file.name}: ${error.message}`);
+                    }
+                }
+                
+                this.hideUploadProgress();
+                await this.loadSongs(); // Reload songs from database
+            }
+            
+                        async uploadSongToSupabase(file) {
+                try {
+                    if (file.size > 50 * 1024 * 1024) {
+                        throw new Error('File too large. Maximum size is 50MB.');
+                    }
+                    
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+                    const filePath = `${this.currentGenre}/${fileName}`;
+                    
+                    // Upload file to Supabase Storage first
+                    const { data: uploadData, error: uploadError } = await this.supabase.storage
+                        .from('songs')
+                        .upload(filePath, file);
+                    
+                    if (uploadError) {
+                        throw uploadError;
+                    }
+                    
+                    // Try to get audio duration, but don't fail if it doesn't work
+                    let duration = 0;
+                    try {
+                        duration = await this.getAudioDuration(file);
+                    } catch (durationError) {
+                        console.warn('Could not get audio duration:', durationError);
+                        // Continue without duration - it's not critical
+                    }
+                    
+                    // Save song metadata to database
+                    const { data: songData, error: dbError } = await this.supabase
+                        .from('songs')
+                        .insert({
+                            title: file.name.replace(/\.[^/.]+$/, ""),
+                            artist: 'Sing A New Psalm',
+                            genre: this.currentGenre,
+                            file_path: filePath,
+                            cover_url: `https://picsum.photos/seed/${fileName}/300/300.webp`,
+                            duration: duration,
+                            file_size: file.size
+                        })
+                        .select()
+                        .single();
+                    
+                    if (dbError) {
+                        // Clean up uploaded file if database insert fails
+                        await this.supabase.storage
+                            .from('songs')
+                            .remove([filePath]);
+                        throw dbError;
+                    }
+                    
+                    return songData;
+                    
+                } catch (error) {
+                    throw error;
+                }
+            }
+            
+            getAudioDuration(file) {
+                return new Promise((resolve, reject) => {
+                    const audio = new Audio();
+                    const objectUrl = URL.createObjectURL(file);
+                    
+                    const cleanup = () => {
+                        URL.revokeObjectURL(objectUrl);
+                        audio.removeEventListener('loadedmetadata', onLoadedMetadata);
+                        audio.removeEventListener('error', onError);
+                    };
+                    
+                    const onLoadedMetadata = () => {
+                        cleanup();
+                        resolve(audio.duration || 0);
+                    };
+                    
+                    const onError = () => {
+                        cleanup();
+                        reject(new Error('Could not load audio metadata'));
+                    };
+                    
+                    audio.addEventListener('loadedmetadata', onLoadedMetadata);
+                    audio.addEventListener('error', onError);
+                    
+                    // Set a longer timeout for metadata loading
+                    setTimeout(() => {
+                        cleanup();
+                        reject(new Error('Audio metadata loading timeout'));
+                    }, 30000); // 30 seconds timeout
+                    
+                    audio.src = objectUrl;
+                });
+            }
+            
+            async deleteSong(index) {
+                const currentSongs = this.genres[this.currentGenre].songs;
+                const song = currentSongs[index];
+                
+                if (confirm(`Are you sure you want to delete "${song.title}"?`)) {
+                    try {
+                        // Delete from database
+                        const { error: dbError } = await this.supabase
+                            .from('songs')
+                            .delete()
+                            .eq('id', song.id);
+                        
+                        if (dbError) {
+                            throw dbError;
+                        }
+                        
+                        // Delete file from storage
+                        const { error: storageError } = await this.supabase.storage
+                            .from('songs')
+                            .remove([song.file_path]);
+                        
+                        if (storageError) {
+                            console.error('Error deleting file from storage:', storageError);
+                        }
+                        
+                        // Update local state
+                        if (this.currentSongIndex === index) {
+                            this.audio.pause();
+                            this.currentSongIndex = -1;
+                            this.isPlaying = false;
+                            this.updatePlayButton();
+                        } else if (this.currentSongIndex > index) {
+                            this.currentSongIndex--;
+                        }
+                        
+                        await this.loadSongs(); // Reload songs from database
+                        
+                    } catch (error) {
+                        console.error('Error deleting song:', error);
+                        alert('Error deleting song. Please try again.');
+                    }
+                }
+            }
+            
+            showUploadProgress() {
+                this.uploadProgress.classList.remove('hidden');
+            }
+            
+            hideUploadProgress() {
+                this.uploadProgress.classList.add('hidden');
+            }
+            
+            updateUploadProgress(progress, message = 'Processing files...') {
+                this.progressBar.style.width = `${progress}%`;
+                this.progressText.textContent = `${Math.round(progress)}%`;
+                this.uploadProgress.querySelector('.text-sm.font-medium').textContent = message;
+            }
+            
+                                                async downloadSongFree(index) {
+                const currentSongs = this.genres[this.currentGenre].songs;
+                if (index < 0 || index >= currentSongs.length) return;
+                
+                const song = currentSongs[index];
+                
+                try {
+                    // Show loading state
+                    const downloadBtn = document.querySelector(`[data-index="${index}"] .download-btn`);
+                    const originalIcon = downloadBtn.innerHTML;
+                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    downloadBtn.disabled = true;
+                    
+                    // Get the public URL for the song file directly
+                    const { data } = this.supabase
+                        .storage
+                        .from('songs')
+                        .getPublicUrl(song.file_path);
+                    
+                    // Create download link
+                    const link = document.createElement('a');
+                    link.href = data.publicUrl;
+                    link.download = `${song.title} - ${song.artist}.mp3`;
+                    link.target = '_blank';
+                    
+                    // Trigger download
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Show success message
+                    alert(`Download started for "${song.title}"!\n\nIf you enjoy our music, consider supporting us with a donation using the heart button next to the download.`);
+                    
+                    // Restore button state
+                    downloadBtn.innerHTML = originalIcon;
+                    downloadBtn.disabled = false;
+                    
+                } catch (error) {
+                    console.error('Error downloading song:', error);
+                    alert('Error downloading song. Please try again.');
+                    
+                    // Restore button state
+                    const downloadBtn = document.querySelector(`[data-index="${index}"] .download-btn`);
+                    if (downloadBtn) {
+                        downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                        downloadBtn.disabled = false;
+                    }
+                }
+            }
+            
+            async secureDownload(downloadToken) {
+                try {
+                    // Call the secure download function
+                    const { data, error } = await this.supabase.functions.invoke('secure-download', {
+                        body: { token: downloadToken }
+                    });
+                    
+                    if (error) {
+                        throw error;
+                    }
+                    
+                    if (!data.success) {
+                        throw new Error('Invalid or expired download token');
+                    }
+                    
+                    // Create download link
+                    const link = document.createElement('a');
+                    link.href = data.downloadUrl;
+                    link.download = `${data.songTitle} - ${data.songArtist}.mp3`;
+                    link.target = '_blank';
+                    
+                    // Trigger download
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Show success message
+                    alert(`Download started for "${data.songTitle}"!\n\nRemaining downloads: ${data.downloadsRemaining}`);
+                    
+                    // Clean up stored token if no downloads remaining
+                    if (data.downloadsRemaining === 0) {
+                        // Find which song this was for and clean up
+                        Object.keys(localStorage).forEach(key => {
+                            if (key.startsWith('download_token_') && localStorage.getItem(key) === downloadToken) {
+                                localStorage.removeItem(key);
+                            }
+                        });
+                    }
+                    
+                } catch (error) {
+                    console.error('Error downloading file:', error);
+                    alert('Error downloading file. The download link may have expired or been used already.');
+                }
+            }
+        }
+        
+                        // Check for successful payment return and also check if user just returned from Stripe
+        function checkPaymentReturn() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentSuccess = urlParams.get('payment_success');
+            
+            // Check if user just returned from Stripe (by checking if they have pending download and recent activity)
+            const pendingDownload = localStorage.getItem('pendingDownload');
+            const isReturningFromPayment = document.referrer.includes('stripe.com') || 
+                                         document.referrer.includes('checkout.stripe.com') ||
+                                         paymentSuccess === 'true';
+            
+            if ((paymentSuccess === 'true' || isReturningFromPayment) && pendingDownload) {
+                try {
+                    const paymentData = JSON.parse(pendingDownload);
+                    
+                    // Mark as paid (but not yet downloaded)
+                    const paidKey = `paid_${paymentData.songId}`;
+                    localStorage.setItem(paidKey, 'true');
+                    
+                    // Clear pending download
+                    localStorage.removeItem('pendingDownload');
+                    
+                    // Show success message
+                    alert(`Payment successful! You can now download "${paymentData.songTitle}" by clicking the download button.`);
+                    
+                    // Clean URL if it has payment_success parameter
+                    if (paymentSuccess === 'true') {
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    }
+                    
+                } catch (error) {
+                    console.error('Error processing payment return:', error);
+                }
+            }
+        }
+        
+        // Add a manual payment confirmation function for users who completed payment
+        function confirmPaymentManually() {
+            const pendingDownload = localStorage.getItem('pendingDownload');
+            
+            if (pendingDownload) {
+                if (confirm('Did you complete your payment successfully? Click OK if yes, Cancel if no.')) {
+                    try {
+                        const paymentData = JSON.parse(pendingDownload);
+                        
+                        // Mark as paid (but not yet downloaded)
+                        const paidKey = `paid_${paymentData.songId}`;
+                        localStorage.setItem(paidKey, 'true');
+                        
+                        // Clear pending download
+                        localStorage.removeItem('pendingDownload');
+                        
+                        alert(`Payment confirmed! You can now download "${paymentData.songTitle}" by clicking the download button.`);
+                        
+                    } catch (error) {
+                        console.error('Error confirming payment:', error);
+                    }
+                }
+            } else {
+                alert('No pending payment found. Please initiate a download first.');
+            }
+        }
+        
+        // Initialize the music player when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.musicPlayer = new ChristianMusicPlayer();
+            checkPaymentReturn();
+        });
+        
+        // Check for successful payment return and handle secure download
+        function checkPaymentReturn() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentSuccess = urlParams.get('payment_success');
+            const downloadToken = urlParams.get('download_token');
+            const songId = urlParams.get('song_id');
+            
+            if (paymentSuccess === 'true' && downloadToken) {
+                // Payment was successful, initiate secure download
+                const player = window.musicPlayer;
+                if (player && player.secureDownload) {
+                    // Small delay to ensure page is fully loaded
+                    setTimeout(() => {
+                        alert('Payment successful! Your download will start automatically.');
+                        player.secureDownload(downloadToken);
+                        
+                        // Clean up URL parameters
+                        const newUrl = window.location.pathname;
+                        window.history.replaceState({}, document.title, newUrl);
+                    }, 1000);
+                }
+            } else if (urlParams.get('payment_cancelled') === 'true') {
+                alert('Payment was cancelled. You can try again anytime by clicking the download button.');
+                
+                // Clean up URL parameters
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+            }
+        }
+        
+        // Enable builder mode for testing
+        if (window.location.search.includes('test')) {
+            localStorage.setItem('builderMode', 'true');
+            window.location.reload();
+        }
+    </script>
+<script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script>
+
+
+</body></html>
