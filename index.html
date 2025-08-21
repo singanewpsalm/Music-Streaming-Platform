@@ -1,25 +1,27 @@
-<!DOCTYPE html><html lang="en"><head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sing A New Psalm - Christian Music Streaming</title>
-    <meta name="description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary"/>
+    <meta name="description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary">
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Sing A New Psalm - Christian Music Streaming"/>
-    <meta property="og:description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary"/>
-    <meta property="og:url" content="https://www.onspace.ai"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:site_name" content="OnSpace.AI"/>
-    <meta property="og:image" content="https://cdn-ai.onspace.ai/onspace/project/screenshot/pre-site/9b1inu.jpg"/>
-    <meta property="og:image:width" content="1200"/>
-    <meta property="og:image:height" content="630"/>
+    <meta property="og:title" content="Sing A New Psalm - Christian Music Streaming">
+    <meta property="og:description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary">
+    <meta property="og:url" content="https://www.onspace.ai">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="OnSpace.AI">
+    <meta property="og:image" content="https://via.placeholder.com/1200x630/1f2937/ffffff?text=Sing+A+New+Psalm">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
     
     <!-- Twitter Card Tags -->
-    <meta name="twitter:card" content="summary_large_image"/>
-    <meta name="twitter:title" content="Sing A New Psalm - Christian Music Streaming"/>
-    <meta name="twitter:description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary"/>
-    <meta name="twitter:image" content="https://cdn-ai.onspace.ai/onspace/project/screenshot/pre-site/9b1inu.jpg"/>
-    <meta name="twitter:url" content="https://www.onspace.ai"/>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Sing A New Psalm - Christian Music Streaming">
+    <meta name="twitter:description" content="Stream Christian music across multiple genres - Rap, Rock, EDM, and Contemporary">
+    <meta name="twitter:image" content="https://via.placeholder.com/1200x630/1f2937/ffffff?text=Sing+A+New+Psalm">
+    <meta name="twitter:url" content="https://www.onspace.ai">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -36,7 +38,7 @@
             }
         }
     </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -115,7 +117,8 @@
                 
                 <!-- YouTube Channel Link -->
                 <div class="flex items-center space-x-4">
-                    <a href="https://www.youtube.com/@singanewpsalm" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors duration-200 group">
+                    <a href="https://www.youtube.com/@singanewpsalm" target="_blank" rel="noopener noreferrer" 
+                       class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors duration-200 group">
                         <i class="fab fa-youtube text-white text-xl group-hover:scale-110 transition-transform duration-200"></i>
                         <span class="text-white font-medium hidden sm:inline">YouTube Channel</span>
                     </a>
@@ -144,7 +147,7 @@
                     <i class="fas fa-cloud-upload-alt text-4xl text-primary mb-4"></i>
                     <p class="text-lg font-medium mb-2">Drop MP3 files here or click to browse</p>
                     <p class="text-gray-400 text-sm">Supports MP3 files up to 50MB each</p>
-                    <input type="file" id="fileInput" multiple="" accept=".mp3,audio/mpeg" class="hidden"/>
+                    <input type="file" id="fileInput" multiple accept=".mp3,audio/mpeg" class="hidden">
                 </div>
                 
                 <!-- Upload Progress -->
@@ -200,6 +203,15 @@
                 <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="sermons">
                     <i class="fas fa-bible mr-2"></i>Sermons
                 </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="christian-reggae">
+                    <i class="fas fa-palm-tree mr-2"></i>Christian Reggae
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="greek-praise">
+                    <i class="fas fa-columns mr-2"></i>Greek Praise
+                </button>
+                <button class="genre-tab px-6 py-3 rounded-lg font-medium" data-genre="chinese-praise">
+                    <i class="fas fa-yin-yang mr-2"></i>Chinese Praise
+                </button>
             </div>
             
             <!-- Current Genre Title -->
@@ -232,7 +244,7 @@
             <div class="flex items-center space-x-4">
                 <!-- Song Info -->
                 <div class="flex items-center space-x-3 flex-1 min-w-0">
-                    <img id="playerCover" src="" alt="Song cover" class="w-12 h-12 rounded-lg object-cover"/>
+                    <img id="playerCover" src="" alt="Song cover" class="w-12 h-12 rounded-lg object-cover">
                     <div class="min-w-0 flex-1">
                         <h4 id="playerTitle" class="font-medium truncate">Song Title</h4>
                         <p id="playerArtist" class="text-sm text-gray-400 truncate">Sing A New Psalm</p>
@@ -264,7 +276,7 @@
                 <!-- Volume -->
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-volume-up text-gray-400"></i>
-                    <input type="range" id="volumeSlider" min="0" max="100" value="100" class="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"/>
+                    <input type="range" id="volumeSlider" min="0" max="100" value="100" class="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer">
                 </div>
             </div>
         </div>
@@ -282,7 +294,7 @@
                     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFmeWJya3lrcmt6am1hbG9naW1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzMDM0NjIsImV4cCI6MjA3MDg3OTQ2Mn0.9X2KbY3gR2bUUgvoEkyMErWslb0y0T3dKU-0nVb-nTQ'
                 );
                 
-                                                                this.genres = {
+                                                                                this.genres = {
                     'christian-rap': {
                         title: 'Christian Rap',
                         description: 'Uplifting rap music with Christian themes and messages',
@@ -329,6 +341,24 @@
                         title: 'Sermons',
                         description: 'Inspiring sermons and teachings for spiritual growth',
                         icon: 'fas fa-bible',
+                        songs: []
+                    },
+                    'christian-reggae': {
+                        title: 'Christian Reggae',
+                        description: 'Uplifting reggae music with Christian faith and messages',
+                        icon: 'fas fa-palm-tree',
+                        songs: []
+                    },
+                    'greek-praise': {
+                        title: 'Greek Praise',
+                        description: 'Greek Christian worship music and Byzantine chants',
+                        icon: 'fas fa-columns',
+                        songs: []
+                    },
+                    'chinese-praise': {
+                        title: 'Chinese Praise',
+                        description: 'Chinese Christian worship and praise music',
+                        icon: 'fas fa-yin-yang',
                         songs: []
                     }
                 };
@@ -1090,7 +1120,12 @@
             window.location.reload();
         }
     </script>
-<script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script>
+<script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script></body>
 
 
-</body></html>
+
+
+
+
+
+</html>
