@@ -115,14 +115,7 @@
                     </div>
                 </div>
                 
-                <!-- YouTube Channel Link -->
-                <div class="flex items-center space-x-4">
-                    <a href="https://www.youtube.com/@singanewpsalm" target="_blank" rel="noopener noreferrer" 
-                       class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors duration-200 group">
-                        <i class="fab fa-youtube text-white text-xl group-hover:scale-110 transition-transform duration-200"></i>
-                        <span class="text-white font-medium hidden sm:inline">YouTube Channel</span>
-                    </a>
-                </div>
+                
                 <!-- Builder Mode Toggle (only visible in builder) -->
                 <div id="builderControls" class="hidden">
                     <button id="toggleUpload" class="bg-primary hover:bg-accent px-4 py-2 rounded-lg font-medium transition-colors duration-200">
@@ -290,6 +283,45 @@
 
     <!-- Hidden Audio Element -->
     <audio id="audioElement" preload="metadata"></audio>
+
+    <!-- Footer -->
+    <footer class="bg-secondary border-t border-gray-800 mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                        <i class="fas fa-cross text-white text-sm"></i>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h3 class="text-lg font-semibold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                            Sing A New Psalm
+                        </h3>
+                        <p class="text-sm text-gray-400">Christian Music Streaming</p>
+                    </div>
+                </div>
+                
+                <!-- Social Links -->
+                <div class="flex items-center space-x-4">
+                    <a href="https://www.youtube.com/@singanewpsalm" target="_blank" rel="noopener noreferrer" 
+                       class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors duration-200 group">
+                        <i class="fab fa-youtube text-white text-xl group-hover:scale-110 transition-transform duration-200"></i>
+                        <span class="text-white font-medium">YouTube Channel</span>
+                    </a>
+                </div>
+                
+                <!-- Copyright -->
+                <div class="text-center md:text-right">
+                    <p class="text-sm text-gray-400">
+                        © 2025 Sing A New Psalm. All rights reserved.
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">
+                        Spreading the Gospel through music
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <script>
         class ChristianMusicPlayer {
