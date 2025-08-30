@@ -120,6 +120,45 @@
             background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
             border-radius: 10px;
         }
+
+        .blog-overlay {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .blog-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .blog-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .blog-content::-webkit-scrollbar-track {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 10px;
+        }
+
+        .blog-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+            border-radius: 10px;
+        }
+
+        .blog-image-upload {
+            border: 2px dashed #8B5CF6;
+            transition: all 0.3s ease;
+        }
+
+        .blog-image-upload:hover {
+            border-color: #A78BFA;
+            background: rgba(139, 92, 246, 0.05);
+        }
+
+        .blog-image-upload.dragover {
+            border-color: #A78BFA;
+            background: rgba(139, 92, 246, 0.1);
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
@@ -141,6 +180,12 @@
                 
                 <!-- Action Buttons -->
                 <div class="flex items-center space-x-3">
+                    <!-- Blog Button -->
+                    <button id="blogButton" class="flex items-center space-x-2 bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg transition-colors duration-200 group">
+                        <i class="fas fa-blog text-white text-sm group-hover:scale-110 transition-transform duration-200"></i>
+                        <span class="text-white font-medium">Blog</span>
+                    </button>
+                    
                     <!-- Tip Button -->
                     <a href="https://buy.stripe.com/14AfZicZP5ok3PA7Rl7AI08" target="_blank" rel="noopener noreferrer" 
                        class="flex items-center space-x-2 bg-gold hover:bg-yellow-600 px-4 py-2 rounded-lg transition-colors duration-200 group">
@@ -179,6 +224,37 @@
                     <br class="hidden sm:inline">
                     Commercial usage is prohibited. Support our mission with an optional donation!
                 </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Section (hidden by default) -->
+    <section id="blogSection" class="hidden bg-gray-800 border-b border-gray-700">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                        Blog Posts
+                    </h2>
+                    <button id="newPostBtn" class="bg-primary hover:bg-accent px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                        <i class="fas fa-plus mr-2"></i>New Post
+                    </button>
+                </div>
+                
+                <!-- Blog Posts List -->
+                <div id="blogPosts" class="space-y-6">
+                    <!-- Blog posts will be rendered here -->
+                </div>
+                
+                <!-- Empty State -->
+                <div id="blogEmptyState" class="text-center py-16">
+                    <i class="fas fa-blog text-6xl text-gray-600 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-400 mb-2">No blog posts yet</h3>
+                    <p class="text-gray-500 mb-6">Create your first blog post to get started.</p>
+                    <button class="newPostTrigger bg-primary hover:bg-accent px-6 py-3 rounded-lg font-medium transition-colors duration-200">
+                        <i class="fas fa-plus mr-2"></i>Create First Post
+                    </button>
+                </div>
             </div>
         </div>
     </section>
@@ -343,6 +419,60 @@
 
     <!-- Hidden Audio Element -->
     <audio id="audioElement" preload="metadata"></audio>
+
+    <!-- Blog Post Modal -->
+    <div id="blogModal" class="fixed inset-0 blog-overlay z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="blog-content bg-gray-800 rounded-xl max-w-2xl w-full relative border border-gray-700 shadow-2xl">
+                <!-- Close Button -->
+                <button id="closeBlogModal" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                
+                <!-- Modal Header -->
+                <div class="bg-gradient-to-r from-primary to-accent p-6 rounded-t-xl">
+                    <h2 class="text-2xl font-bold text-white">Create New Blog Post</h2>
+                </div>
+                
+                <!-- Modal Content -->
+                <form id="blogForm" class="p-6 space-y-6">
+                    <div>
+                        <label class="block text-gray-300 text-sm font-medium mb-2">Title</label>
+                        <input type="text" id="blogTitle" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-primary focus:outline-none">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-300 text-sm font-medium mb-2">Content</label>
+                        <textarea id="blogContent" rows="6" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-primary focus:outline-none resize-vertical"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-300 text-sm font-medium mb-2">Image (Optional)</label>
+                        <div id="blogImageUpload" class="blog-image-upload rounded-lg p-6 text-center cursor-pointer">
+                            <i class="fas fa-image text-3xl text-primary mb-2"></i>
+                            <p class="text-gray-400">Click to upload an image or drag and drop</p>
+                            <input type="file" id="blogImageInput" accept="image/*" class="hidden">
+                        </div>
+                        <div id="blogImagePreview" class="hidden mt-4">
+                            <img id="blogPreviewImg" src="" alt="Preview" class="max-w-full h-48 object-cover rounded-lg">
+                            <button type="button" id="removeBlogImage" class="mt-2 text-red-400 hover:text-red-300 text-sm">
+                                <i class="fas fa-times mr-1"></i>Remove Image
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" id="cancelBlogPost" class="px-6 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-2 bg-primary hover:bg-accent rounded-lg font-medium transition-colors">
+                            Publish Post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- Mission Page Overlay -->
     <div id="missionOverlay" class="fixed inset-0 mission-overlay z-50 hidden">
@@ -611,11 +741,13 @@
                 this.audio = document.getElementById('audioElement');
                 this.isBuilderMode = this.detectBuilderMode();
                 this.isLoading = false;
+                this.blogPosts = JSON.parse(localStorage.getItem('blogPosts')) || [];
                 
                 this.initializeElements();
                 this.setupEventListeners();
                 this.loadSongs();
                 this.updateBuilderUI();
+                this.renderBlogPosts();
             }
             
             detectBuilderMode() {
@@ -658,6 +790,24 @@
                 this.missionOverlay = document.getElementById('missionOverlay');
                 this.missionLink = document.getElementById('missionLink');
                 this.closeMission = document.getElementById('closeMission');
+
+                // Blog elements
+                this.blogButton = document.getElementById('blogButton');
+                this.blogSection = document.getElementById('blogSection');
+                this.blogModal = document.getElementById('blogModal');
+                this.blogPosts = document.getElementById('blogPosts');
+                this.blogEmptyState = document.getElementById('blogEmptyState');
+                this.newPostBtn = document.getElementById('newPostBtn');
+                this.closeBlogModal = document.getElementById('closeBlogModal');
+                this.blogForm = document.getElementById('blogForm');
+                this.blogTitle = document.getElementById('blogTitle');
+                this.blogContent = document.getElementById('blogContent');
+                this.blogImageUpload = document.getElementById('blogImageUpload');
+                this.blogImageInput = document.getElementById('blogImageInput');
+                this.blogImagePreview = document.getElementById('blogImagePreview');
+                this.blogPreviewImg = document.getElementById('blogPreviewImg');
+                this.removeBlogImage = document.getElementById('removeBlogImage');
+                this.cancelBlogPost = document.getElementById('cancelBlogPost');
             }
             
             updateBuilderUI() {
@@ -694,10 +844,36 @@
                     if (e.target === this.missionOverlay) this.hideMission();
                 });
 
-                // Escape key to close mission
+                // Blog events
+                this.blogButton.addEventListener('click', () => this.toggleBlogSection());
+                this.newPostBtn.addEventListener('click', () => this.showBlogModal());
+                document.querySelectorAll('.newPostTrigger').forEach(btn => {
+                    btn.addEventListener('click', () => this.showBlogModal());
+                });
+                this.closeBlogModal.addEventListener('click', () => this.hideBlogModal());
+                this.cancelBlogPost.addEventListener('click', () => this.hideBlogModal());
+                this.blogModal.addEventListener('click', (e) => {
+                    if (e.target === this.blogModal) this.hideBlogModal();
+                });
+                this.blogForm.addEventListener('submit', (e) => this.handleBlogSubmit(e));
+                this.blogImageUpload.addEventListener('click', () => this.blogImageInput.click());
+                this.blogImageInput.addEventListener('change', (e) => this.handleBlogImageSelect(e));
+                this.removeBlogImage.addEventListener('click', () => this.removeBlogImagePreview());
+
+                // Blog image drag and drop
+                this.blogImageUpload.addEventListener('dragover', (e) => this.handleBlogDragOver(e));
+                this.blogImageUpload.addEventListener('dragleave', (e) => this.handleBlogDragLeave(e));
+                this.blogImageUpload.addEventListener('drop', (e) => this.handleBlogDrop(e));
+
+                // Escape key to close modals
                 document.addEventListener('keydown', (e) => {
-                    if (e.key === 'Escape' && !this.missionOverlay.classList.contains('hidden')) {
-                        this.hideMission();
+                    if (e.key === 'Escape') {
+                        if (!this.missionOverlay.classList.contains('hidden')) {
+                            this.hideMission();
+                        }
+                        if (!this.blogModal.classList.contains('hidden')) {
+                            this.hideBlogModal();
+                        }
                     }
                 });
                 
@@ -711,6 +887,208 @@
                     this.uploadArea.addEventListener('dragover', (e) => this.handleDragOver(e));
                     this.uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
                     this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
+                }
+            }
+
+            // Blog Methods
+            toggleBlogSection() {
+                this.blogSection.classList.toggle('hidden');
+            }
+
+            showBlogModal() {
+                this.blogModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                this.resetBlogForm();
+            }
+
+            hideBlogModal() {
+                this.blogModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                this.resetBlogForm();
+            }
+
+            resetBlogForm() {
+                this.blogForm.reset();
+                this.removeBlogImagePreview();
+            }
+
+            handleBlogImageSelect(e) {
+                const file = e.target.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    this.previewBlogImage(file);
+                }
+            }
+
+            previewBlogImage(file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.blogPreviewImg.src = e.target.result;
+                    this.blogImagePreview.classList.remove('hidden');
+                    this.blogImageUpload.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+
+            removeBlogImagePreview() {
+                this.blogImagePreview.classList.add('hidden');
+                this.blogImageUpload.style.display = 'block';
+                this.blogImageInput.value = '';
+            }
+
+            handleBlogDragOver(e) {
+                e.preventDefault();
+                this.blogImageUpload.classList.add('dragover');
+            }
+
+            handleBlogDragLeave(e) {
+                e.preventDefault();
+                this.blogImageUpload.classList.remove('dragover');
+            }
+
+            handleBlogDrop(e) {
+                e.preventDefault();
+                this.blogImageUpload.classList.remove('dragover');
+                const files = e.dataTransfer.files;
+                if (files.length > 0 && files[0].type.startsWith('image/')) {
+                    this.previewBlogImage(files[0]);
+                }
+            }
+
+            async handleBlogSubmit(e) {
+                e.preventDefault();
+                
+                const title = this.blogTitle.value.trim();
+                const content = this.blogContent.value.trim();
+                const imageFile = this.blogImageInput.files[0];
+                
+                if (!title || !content) return;
+
+                try {
+                    let imageUrl = null;
+                    
+                    // Upload image if provided
+                    if (imageFile) {
+                        const fileExt = imageFile.name.split('.').pop();
+                        const fileName = `blog-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+                        const filePath = `blog-images/${fileName}`;
+                        
+                        const { data: uploadData, error: uploadError } = await this.supabase.storage
+                            .from('songs')
+                            .upload(filePath, imageFile);
+                        
+                        if (uploadError) {
+                            throw uploadError;
+                        }
+                        
+                        const { data } = this.supabase.storage
+                            .from('songs')
+                            .getPublicUrl(filePath);
+                        
+                        imageUrl = data.publicUrl;
+                    }
+                    
+                    // Create blog post object
+                    const post = {
+                        id: Date.now().toString(),
+                        title: title,
+                        content: content,
+                        imageUrl: imageUrl,
+                        date: new Date().toISOString(),
+                        formattedDate: new Date().toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        })
+                    };
+                    
+                    // Add to beginning of posts array
+                    this.blogPosts.unshift(post);
+                    
+                    // Save to localStorage
+                    localStorage.setItem('blogPosts', JSON.stringify(this.blogPosts));
+                    
+                    // Re-render posts
+                    this.renderBlogPosts();
+                    
+                    // Hide modal
+                    this.hideBlogModal();
+                    
+                } catch (error) {
+                    console.error('Error creating blog post:', error);
+                    alert('Error creating blog post. Please try again.');
+                }
+            }
+
+            renderBlogPosts() {
+                if (this.blogPosts.length === 0) {
+                    this.blogEmptyState.classList.remove('hidden');
+                    this.blogPosts.innerHTML = '';
+                    return;
+                }
+                
+                this.blogEmptyState.classList.add('hidden');
+                
+                this.blogPosts.innerHTML = this.blogPosts.map(post => `
+                    <article class="bg-gray-700 rounded-xl overflow-hidden shadow-lg">
+                        ${post.imageUrl ? `
+                            <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
+                        ` : ''}
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-xl font-semibold text-white">${post.title}</h3>
+                                ${this.isBuilderMode ? `
+                                    <button class="delete-post-btn text-gray-400 hover:text-red-400 transition-colors" data-post-id="${post.id}">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                            <p class="text-sm text-gray-400 mb-4">${post.formattedDate}</p>
+                            <div class="text-gray-300 leading-relaxed">
+                                ${post.content.split('\n').map(paragraph => 
+                                    paragraph.trim() ? `<p class="mb-2">${paragraph}</p>` : ''
+                                ).join('')}
+                            </div>
+                        </div>
+                    </article>
+                `).join('');
+                
+                // Add delete event listeners if in builder mode
+                if (this.isBuilderMode) {
+                    this.blogPosts.querySelectorAll('.delete-post-btn').forEach(btn => {
+                        btn.addEventListener('click', () => this.deleteBlogPost(btn.dataset.postId));
+                    });
+                }
+            }
+
+            async deleteBlogPost(postId) {
+                if (!confirm('Are you sure you want to delete this blog post?')) return;
+                
+                const postIndex = this.blogPosts.findIndex(post => post.id === postId);
+                if (postIndex === -1) return;
+                
+                const post = this.blogPosts[postIndex];
+                
+                try {
+                    // Delete image from storage if it exists
+                    if (post.imageUrl && post.imageUrl.includes('supabase')) {
+                        const filePath = post.imageUrl.split('/').pop();
+                        await this.supabase.storage
+                            .from('songs')
+                            .remove([`blog-images/${filePath}`]);
+                    }
+                    
+                    // Remove from array
+                    this.blogPosts.splice(postIndex, 1);
+                    
+                    // Save to localStorage
+                    localStorage.setItem('blogPosts', JSON.stringify(this.blogPosts));
+                    
+                    // Re-render
+                    this.renderBlogPosts();
+                    
+                } catch (error) {
+                    console.error('Error deleting blog post:', error);
+                    alert('Error deleting blog post. Please try again.');
                 }
             }
 
