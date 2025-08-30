@@ -846,10 +846,12 @@
 
                 // Blog events
                 this.blogButton.addEventListener('click', () => this.toggleBlogSection());
-                this.newPostBtn.addEventListener('click', () => this.showBlogModal());
-                document.querySelectorAll('.newPostTrigger').forEach(btn => {
-                    btn.addEventListener('click', () => this.showBlogModal());
-                });
+                if (this.isBuilderMode) {
+                    this.newPostBtn.addEventListener('click', () => this.showBlogModal());
+                    document.querySelectorAll('.newPostTrigger').forEach(btn => {
+                        btn.addEventListener('click', () => this.showBlogModal());
+                    });
+                }
                 this.closeBlogModal.addEventListener('click', () => this.hideBlogModal());
                 this.cancelBlogPost.addEventListener('click', () => this.hideBlogModal());
                 this.blogModal.addEventListener('click', (e) => {
@@ -1023,6 +1025,11 @@
                 if (this.blogPosts.length === 0) {
                     this.blogEmptyState.classList.remove('hidden');
                     this.blogPosts.innerHTML = '';
+                    // Hide the "Create First Post" button if not in builder mode
+                    const createFirstPostBtn = this.blogEmptyState.querySelector('.newPostTrigger');
+                    if (createFirstPostBtn) {
+                        createFirstPostBtn.style.display = this.isBuilderMode ? 'inline-block' : 'none';
+                    }
                     return;
                 }
                 
