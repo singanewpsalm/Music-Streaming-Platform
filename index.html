@@ -956,21 +956,31 @@
                 }
             }
 
-            async handleBlogSubmit(e) {
+                        async handleBlogSubmit(e) {
                 e.preventDefault();
                 
                 const title = this.blogTitle.value.trim();
                 const content = this.blogContent.value.trim();
                 const imageFile = this.blogImageInput.files[0];
                 
-                if (!title || !content) return;
+                if (!title || !content) {
+                    alert('Please fill in both title and content.');
+                    return;
+                }
+
+                // Show loading state
+                const submitBtn = this.blogForm.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = 'Publishing...';
+                submitBtn.disabled = true;
 
                 try {
                     let imageUrl = null;
                     
                     // Upload image if provided
                     if (imageFile) {
-                        const fileExt = imageFile.name.split('.').pop();
+                        console.log('Uploading image:', imageFile.name);
+                        const fileExt = imageFile.name.split('.').pop().toLowerCase();
                         const fileName = `blog-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
                         const filePath = `blog-images/${fileName}`;
                         
@@ -979,7 +989,8 @@
                             .upload(filePath, imageFile);
                         
                         if (uploadError) {
-                            throw uploadError;
+                            console.error('Image upload error:', uploadError);
+                            throw new Error('Failed to upload image: ' + uploadError.message);
                         }
                         
                         const { data } = this.supabase.storage
@@ -987,6 +998,7 @@
                             .getPublicUrl(filePath);
                         
                         imageUrl = data.publicUrl;
+                        console.log('Image uploaded successfully:', imageUrl);
                     }
                     
                     // Create blog post object
@@ -1003,6 +1015,8 @@
                         })
                     };
                     
+                    console.log('Creating blog post:', post);
+                    
                     // Add to beginning of posts array
                     this.blogPosts.unshift(post);
                     
@@ -1015,9 +1029,15 @@
                     // Hide modal
                     this.hideBlogModal();
                     
+                    console.log('Blog post created successfully');
+                    
                 } catch (error) {
                     console.error('Error creating blog post:', error);
-                    alert('Error creating blog post. Please try again.');
+                    alert(`Error creating blog post: ${error.message}`);
+                } finally {
+                    // Restore button state
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
                 }
             }
 
