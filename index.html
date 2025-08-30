@@ -844,14 +844,12 @@
                     if (e.target === this.missionOverlay) this.hideMission();
                 });
 
-                // Blog events
+                                // Blog events
                 this.blogButton.addEventListener('click', () => this.toggleBlogSection());
-                if (this.isBuilderMode) {
-                    this.newPostBtn.addEventListener('click', () => this.showBlogModal());
-                    document.querySelectorAll('.newPostTrigger').forEach(btn => {
-                        btn.addEventListener('click', () => this.showBlogModal());
-                    });
-                }
+                this.newPostBtn.addEventListener('click', () => this.showBlogModal());
+                document.querySelectorAll('.newPostTrigger').forEach(btn => {
+                    btn.addEventListener('click', () => this.showBlogModal());
+                });
                 this.closeBlogModal.addEventListener('click', () => this.hideBlogModal());
                 this.cancelBlogPost.addEventListener('click', () => this.hideBlogModal());
                 this.blogModal.addEventListener('click', (e) => {
@@ -1058,10 +1056,10 @@
                 if (this.blogPostsData.length === 0) {
                     this.blogEmptyState.classList.remove('hidden');
                     this.blogPostsContainer.innerHTML = '';
-                    // Hide the "Create First Post" button if not in builder mode
+                    // Show the "Create First Post" button always
                     const createFirstPostBtn = this.blogEmptyState.querySelector('.newPostTrigger');
                     if (createFirstPostBtn) {
-                        createFirstPostBtn.style.display = this.isBuilderMode ? 'inline-block' : 'none';
+                        createFirstPostBtn.style.display = 'inline-block';
                     }
                     return;
                 }
@@ -1076,11 +1074,9 @@
                         <div class="p-6">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-xl font-semibold text-white">${post.title}</h3>
-                                ${this.isBuilderMode ? `
-                                    <button class="delete-post-btn text-gray-400 hover:text-red-400 transition-colors" data-post-id="${post.id}">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
-                                ` : ''}
+                                <button class="delete-post-btn text-gray-400 hover:text-red-400 transition-colors" data-post-id="${post.id}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
                             <p class="text-sm text-gray-400 mb-4">${post.formattedDate}</p>
                             <div class="text-gray-300 leading-relaxed">
@@ -1092,12 +1088,10 @@
                     </article>
                 `).join('');
                 
-                // Add delete event listeners if in builder mode
-                if (this.isBuilderMode) {
-                    this.blogPostsContainer.querySelectorAll('.delete-post-btn').forEach(btn => {
-                        btn.addEventListener('click', () => this.deleteBlogPost(btn.dataset.postId));
-                    });
-                }
+                // Add delete event listeners
+                this.blogPostsContainer.querySelectorAll('.delete-post-btn').forEach(btn => {
+                    btn.addEventListener('click', () => this.deleteBlogPost(btn.dataset.postId));
+                });
             }
 
             async deleteBlogPost(postId) {
