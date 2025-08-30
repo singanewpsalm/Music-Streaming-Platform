@@ -741,7 +741,7 @@
                 this.audio = document.getElementById('audioElement');
                 this.isBuilderMode = this.detectBuilderMode();
                 this.isLoading = false;
-                this.blogPosts = JSON.parse(localStorage.getItem('blogPosts')) || [];
+                this.blogPostsData = JSON.parse(localStorage.getItem('blogPosts')) || [];
                 
                 this.initializeElements();
                 this.setupEventListeners();
@@ -756,7 +756,7 @@
                        window.parent !== window;
             }
             
-            initializeElements() {
+                        initializeElements() {
                 this.songList = document.getElementById('songList');
                 this.emptyState = document.getElementById('emptyState');
                 this.audioPlayer = document.getElementById('audioPlayer');
@@ -795,7 +795,7 @@
                 this.blogButton = document.getElementById('blogButton');
                 this.blogSection = document.getElementById('blogSection');
                 this.blogModal = document.getElementById('blogModal');
-                this.blogPosts = document.getElementById('blogPosts');
+                this.blogPostsContainer = document.getElementById('blogPosts');
                 this.blogEmptyState = document.getElementById('blogEmptyState');
                 this.newPostBtn = document.getElementById('newPostBtn');
                 this.closeBlogModal = document.getElementById('closeBlogModal');
@@ -1033,7 +1033,7 @@
                     localStorage.setItem('blogPosts', JSON.stringify(existingPosts));
                     
                     // Update instance variable
-                    this.blogPosts = existingPosts;
+                    this.blogPostsData = existingPosts;
                     
                     // Re-render posts
                     this.renderBlogPosts();
@@ -1055,9 +1055,9 @@
             }
 
             renderBlogPosts() {
-                if (this.blogPosts.length === 0) {
+                if (this.blogPostsData.length === 0) {
                     this.blogEmptyState.classList.remove('hidden');
-                    this.blogPosts.innerHTML = '';
+                    this.blogPostsContainer.innerHTML = '';
                     // Hide the "Create First Post" button if not in builder mode
                     const createFirstPostBtn = this.blogEmptyState.querySelector('.newPostTrigger');
                     if (createFirstPostBtn) {
@@ -1068,7 +1068,7 @@
                 
                 this.blogEmptyState.classList.add('hidden');
                 
-                this.blogPosts.innerHTML = this.blogPosts.map(post => `
+                this.blogPostsContainer.innerHTML = this.blogPostsData.map(post => `
                     <article class="bg-gray-700 rounded-xl overflow-hidden shadow-lg">
                         ${post.imageUrl ? `
                             <img src="${post.imageUrl}" alt="${post.title}" class="w-full h-48 object-cover">
@@ -1094,7 +1094,7 @@
                 
                 // Add delete event listeners if in builder mode
                 if (this.isBuilderMode) {
-                    this.blogPosts.querySelectorAll('.delete-post-btn').forEach(btn => {
+                    this.blogPostsContainer.querySelectorAll('.delete-post-btn').forEach(btn => {
                         btn.addEventListener('click', () => this.deleteBlogPost(btn.dataset.postId));
                     });
                 }
@@ -1103,10 +1103,10 @@
             async deleteBlogPost(postId) {
                 if (!confirm('Are you sure you want to delete this blog post?')) return;
                 
-                const postIndex = this.blogPosts.findIndex(post => post.id === postId);
+                const postIndex = this.blogPostsData.findIndex(post => post.id === postId);
                 if (postIndex === -1) return;
                 
-                const post = this.blogPosts[postIndex];
+                const post = this.blogPostsData[postIndex];
                 
                 try {
                     // Delete image from storage if it exists
@@ -1118,10 +1118,10 @@
                     }
                     
                     // Remove from array
-                    this.blogPosts.splice(postIndex, 1);
+                    this.blogPostsData.splice(postIndex, 1);
                     
                     // Save to localStorage
-                    localStorage.setItem('blogPosts', JSON.stringify(this.blogPosts));
+                    localStorage.setItem('blogPosts', JSON.stringify(this.blogPostsData));
                     
                     // Re-render
                     this.renderBlogPosts();
