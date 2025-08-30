@@ -739,7 +739,7 @@
                 this.currentSongIndex = -1;
                 this.isPlaying = false;
                 this.audio = document.getElementById('audioElement');
-                this.isBuilderMode = this.detectBuilderMode();
+                                this.isBuilderMode = this.detectBuilderMode();
                 this.isLoading = false;
                 this.blogPostsData = JSON.parse(localStorage.getItem('blogPosts')) || [];
                 
@@ -1091,7 +1091,7 @@
                 `).join('');
                 
                 // Add delete event listeners
-                document.querySelectorAll('.delete-post-btn').forEach(btn => {
+                this.blogPostsContainer.querySelectorAll('.delete-post-btn').forEach(btn => {
                     btn.addEventListener('click', () => this.deleteBlogPost(btn.dataset.postId));
                 });
             }
