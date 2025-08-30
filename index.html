@@ -96,6 +96,30 @@
         .genre-tab:not(.active):hover {
             background: rgba(139, 92, 246, 0.1);
         }
+
+        .mission-overlay {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .mission-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .mission-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .mission-content::-webkit-scrollbar-track {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 10px;
+        }
+
+        .mission-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen">
@@ -293,6 +317,119 @@
     <!-- Hidden Audio Element -->
     <audio id="audioElement" preload="metadata"></audio>
 
+    <!-- Mission Page Overlay -->
+    <div id="missionOverlay" class="fixed inset-0 mission-overlay z-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="mission-content bg-gray-800 rounded-xl max-w-4xl w-full relative border border-gray-700 shadow-2xl">
+                <!-- Close Button -->
+                <button id="closeMission" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                
+                <!-- Mission Header -->
+                <div class="bg-gradient-to-r from-primary to-accent p-8 rounded-t-xl">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-cross text-white text-2xl"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-3xl font-bold text-white">Our Mission</h1>
+                            <p class="text-blue-100">Spreading the Gospel through music worldwide</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mission Content -->
+                <div class="p-8 space-y-8">
+                    <!-- Global Music Vision -->
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 flex items-center text-primary">
+                            <i class="fas fa-globe-americas mr-3"></i>
+                            Global Music Ministry
+                        </h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Our mission is to bring Christian music to every corner of the world, in every language and every genre. 
+                            We believe that music is a universal language that transcends cultural barriers and speaks directly to the heart.
+                        </p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Through this platform, we are creating a diverse collection of Christian music spanning from traditional hymns 
+                            to contemporary rap, from gospel to electronic dance music, ensuring that everyone can find a way to connect 
+                            with God through the music that speaks to their soul.
+                        </p>
+                    </section>
+
+                    <!-- Online Radio Vision -->
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 flex items-center text-accent">
+                            <i class="fas fa-radio mr-3"></i>
+                            Future Online Radio Station
+                        </h2>
+                        <p class="text-gray-300 leading-relaxed">
+                            We envision launching a 24/7 online Christian radio station that will broadcast uplifting music, sermons, 
+                            and inspirational content around the clock. This radio station will serve as a beacon of hope and faith, 
+                            reaching listeners worldwide with messages of love, redemption, and spiritual growth.
+                        </p>
+                    </section>
+
+                    <!-- Church Partnership -->
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 flex items-center text-gold">
+                            <i class="fas fa-handshake mr-3"></i>
+                            The Open Church Project Partnership
+                        </h2>
+                        <p class="text-gray-300 leading-relaxed">
+                            We are proud to be associated with The Open Church Project, a movement dedicated to making faith 
+                            accessible to all people regardless of their background, circumstances, or location. Together, we share 
+                            the vision of breaking down barriers and creating inclusive spaces for worship and spiritual growth.
+                        </p>
+                    </section>
+
+                    <!-- 24/7 Praise Rooms -->
+                    <section>
+                        <h2 class="text-2xl font-semibold mb-4 flex items-center text-primary">
+                            <i class="fas fa-praying-hands mr-3"></i>
+                            24/7 Praise Rooms Initiative
+                        </h2>
+                        <p class="text-gray-300 leading-relaxed mb-4">
+                            Our vision extends beyond digital platforms. We are working to establish physical 24/7 Praise Rooms 
+                            across America, starting with our inaugural location in Oklahoma City, Oklahoma. These sacred spaces 
+                            will be open around the clock for prayer, worship, and spiritual reflection.
+                        </p>
+                        <div class="bg-gray-700 rounded-lg p-4">
+                            <h3 class="font-semibold text-white mb-2">Oklahoma City - Our First Location</h3>
+                            <p class="text-gray-300 text-sm leading-relaxed">
+                                Oklahoma City will serve as our pilot location, demonstrating the power of continuous worship 
+                                and prayer. From there, we plan to expand to cities across America, creating a network of 
+                                praise rooms where people can find solace, community, and connection with God at any hour.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!-- Call to Action -->
+                    <section class="bg-gradient-to-r from-primary to-accent rounded-lg p-6">
+                        <h2 class="text-2xl font-semibold mb-4 text-white">Join Our Mission</h2>
+                        <p class="text-blue-100 mb-6 leading-relaxed">
+                            Whether through music, prayer, or financial support, you can be part of this global ministry. 
+                            Together, we can spread the Gospel to every nation, in every language, through the power of music and worship.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="https://buy.stripe.com/14AfZicZP5ok3PA7Rl7AI08" target="_blank" 
+                               class="bg-gold hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center">
+                                <i class="fas fa-heart mr-2"></i>
+                                Support Our Mission
+                            </a>
+                            <a href="https://www.youtube.com/@singanewpsalm" target="_blank" 
+                               class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center">
+                                <i class="fab fa-youtube mr-2"></i>
+                                Visit Our Channel
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="bg-secondary border-t border-gray-800 mt-16">
         <div class="container mx-auto px-4 py-8">
@@ -310,8 +447,11 @@
                     </div>
                 </div>
                 
-                <!-- Social Links -->
-                <div class="flex items-center space-x-4">
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-6">
+                    <button id="missionLink" class="text-gray-400 hover:text-primary transition-colors duration-200 font-medium">
+                        Our Mission
+                    </button>
                     <a href="https://www.youtube.com/@singanewpsalm" target="_blank" rel="noopener noreferrer" 
                        class="flex items-center space-x-2 bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors duration-200 group">
                         <i class="fab fa-youtube text-white text-xl group-hover:scale-110 transition-transform duration-200"></i>
@@ -470,6 +610,11 @@
                 this.progressBar = document.getElementById('progressBar');
                 this.progressText = document.getElementById('progressText');
                 this.storageWarning = document.getElementById('storageWarning');
+
+                // Mission elements
+                this.missionOverlay = document.getElementById('missionOverlay');
+                this.missionLink = document.getElementById('missionLink');
+                this.closeMission = document.getElementById('closeMission');
             }
             
             updateBuilderUI() {
@@ -498,6 +643,20 @@
                 document.querySelectorAll('.genre-tab').forEach(tab => {
                     tab.addEventListener('click', () => this.switchGenre(tab.dataset.genre));
                 });
+
+                // Mission page events
+                this.missionLink.addEventListener('click', () => this.showMission());
+                this.closeMission.addEventListener('click', () => this.hideMission());
+                this.missionOverlay.addEventListener('click', (e) => {
+                    if (e.target === this.missionOverlay) this.hideMission();
+                });
+
+                // Escape key to close mission
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && !this.missionOverlay.classList.contains('hidden')) {
+                        this.hideMission();
+                    }
+                });
                 
                 if (this.isBuilderMode) {
                     // Builder mode events
@@ -510,6 +669,16 @@
                     this.uploadArea.addEventListener('dragleave', (e) => this.handleDragLeave(e));
                     this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
                 }
+            }
+
+            showMission() {
+                this.missionOverlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            hideMission() {
+                this.missionOverlay.classList.add('hidden');
+                document.body.style.overflow = 'auto';
             }
             
             switchGenre(genreKey) {
@@ -614,7 +783,7 @@
                         
                                                 <div class="flex items-center space-x-2">
                             <span class="text-sm text-gray-400">${this.formatDuration(song.duration || 0)}</span>
-                                                                                    <button class="download-btn p-2 text-gray-400 hover:text-primary transition-colors" data-index="${index}" title="Download song">
+                                                                                    <button class="download-btn p-2 text-gray-400 hover:text-primary transition-colors" data-index="${index}" title="Download song for free">
                                 <i class="fas fa-download"></i>
                             </button>
                             <a href="https://buy.stripe.com/6oUfZif7X2c82Lwb3x7AI04" target="_blank" rel="noopener noreferrer" class="donate-btn p-2 text-gray-400 hover:text-gold transition-colors" title="Support us with a donation">
@@ -632,7 +801,7 @@
                 // Add event listeners
                 this.songList.querySelectorAll('.song-item').forEach(item => {
                     item.addEventListener('click', (e) => {
-                        if (!e.target.closest('.delete-btn') && !e.target.closest('.download-btn')) {
+                        if (!e.target.closest('.delete-btn') && !e.target.closest('.download-btn') && !e.target.closest('.donate-btn')) {
                             this.playSong(parseInt(item.dataset.index));
                         }
                     });
@@ -642,7 +811,7 @@
                 this.songList.querySelectorAll('.download-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        this.downloadSongFree(parseInt(btn.dataset.index));
+                        this.downloadSong(parseInt(btn.dataset.index));
                     });
                 });
                 
@@ -773,6 +942,57 @@
             
             formatDuration(seconds) {
                 return this.formatTime(seconds);
+            }
+            
+            // Free download method
+            async downloadSong(index) {
+                const currentSongs = this.genres[this.currentGenre].songs;
+                if (index < 0 || index >= currentSongs.length) return;
+                
+                const song = currentSongs[index];
+                
+                try {
+                    // Show loading state
+                    const downloadBtn = document.querySelector(`[data-index="${index}"] .download-btn`);
+                    const originalIcon = downloadBtn.innerHTML;
+                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    downloadBtn.disabled = true;
+                    
+                    // Get the public URL for the song file directly
+                    const { data } = this.supabase
+                        .storage
+                        .from('songs')
+                        .getPublicUrl(song.file_path);
+                    
+                    // Create download link
+                    const link = document.createElement('a');
+                    link.href = data.publicUrl;
+                    link.download = `${song.title} - ${song.artist}.mp3`;
+                    link.target = '_blank';
+                    
+                    // Trigger download
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Show success message
+                    alert(`Download started for "${song.title}"!\n\nIf you enjoy our music, please consider supporting us with a donation using the heart button.`);
+                    
+                    // Restore button state
+                    downloadBtn.innerHTML = originalIcon;
+                    downloadBtn.disabled = false;
+                    
+                } catch (error) {
+                    console.error('Error downloading song:', error);
+                    alert('Error downloading song. Please try again.');
+                    
+                    // Restore button state
+                    const downloadBtn = document.querySelector(`[data-index="${index}"] .download-btn`);
+                    if (downloadBtn) {
+                        downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
+                        downloadBtn.disabled = false;
+                    }
+                }
             }
             
             // Builder Mode Methods
@@ -977,201 +1197,12 @@
                 this.progressText.textContent = `${Math.round(progress)}%`;
                 this.uploadProgress.querySelector('.text-sm.font-medium').textContent = message;
             }
-            
-                                                async downloadSongFree(index) {
-                const currentSongs = this.genres[this.currentGenre].songs;
-                if (index < 0 || index >= currentSongs.length) return;
-                
-                const song = currentSongs[index];
-                
-                try {
-                    // Show loading state
-                    const downloadBtn = document.querySelector(`[data-index="${index}"] .download-btn`);
-                    const originalIcon = downloadBtn.innerHTML;
-                    downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-                    downloadBtn.disabled = true;
-                    
-                    // Get the public URL for the song file directly
-                    const { data } = this.supabase
-                        .storage
-                        .from('songs')
-                        .getPublicUrl(song.file_path);
-                    
-                    // Create download link
-                    const link = document.createElement('a');
-                    link.href = data.publicUrl;
-                    link.download = `${song.title} - ${song.artist}.mp3`;
-                    link.target = '_blank';
-                    
-                    // Trigger download
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    // Show success message
-                    alert(`Download started for "${song.title}"!\n\nIf you enjoy our music, consider supporting us with a donation using the heart button next to the download.`);
-                    
-                    // Restore button state
-                    downloadBtn.innerHTML = originalIcon;
-                    downloadBtn.disabled = false;
-                    
-                } catch (error) {
-                    console.error('Error downloading song:', error);
-                    alert('Error downloading song. Please try again.');
-                    
-                    // Restore button state
-                    const downloadBtn = document.querySelector(`[data-index="${index}"] .download-btn`);
-                    if (downloadBtn) {
-                        downloadBtn.innerHTML = '<i class="fas fa-download"></i>';
-                        downloadBtn.disabled = false;
-                    }
-                }
-            }
-            
-            async secureDownload(downloadToken) {
-                try {
-                    // Call the secure download function
-                    const { data, error } = await this.supabase.functions.invoke('secure-download', {
-                        body: { token: downloadToken }
-                    });
-                    
-                    if (error) {
-                        throw error;
-                    }
-                    
-                    if (!data.success) {
-                        throw new Error('Invalid or expired download token');
-                    }
-                    
-                    // Create download link
-                    const link = document.createElement('a');
-                    link.href = data.downloadUrl;
-                    link.download = `${data.songTitle} - ${data.songArtist}.mp3`;
-                    link.target = '_blank';
-                    
-                    // Trigger download
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    
-                    // Show success message
-                    alert(`Download started for "${data.songTitle}"!\n\nRemaining downloads: ${data.downloadsRemaining}`);
-                    
-                    // Clean up stored token if no downloads remaining
-                    if (data.downloadsRemaining === 0) {
-                        // Find which song this was for and clean up
-                        Object.keys(localStorage).forEach(key => {
-                            if (key.startsWith('download_token_') && localStorage.getItem(key) === downloadToken) {
-                                localStorage.removeItem(key);
-                            }
-                        });
-                    }
-                    
-                } catch (error) {
-                    console.error('Error downloading file:', error);
-                    alert('Error downloading file. The download link may have expired or been used already.');
-                }
-            }
-        }
-        
-                        // Check for successful payment return and also check if user just returned from Stripe
-        function checkPaymentReturn() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paymentSuccess = urlParams.get('payment_success');
-            
-            // Check if user just returned from Stripe (by checking if they have pending download and recent activity)
-            const pendingDownload = localStorage.getItem('pendingDownload');
-            const isReturningFromPayment = document.referrer.includes('stripe.com') || 
-                                         document.referrer.includes('checkout.stripe.com') ||
-                                         paymentSuccess === 'true';
-            
-            if ((paymentSuccess === 'true' || isReturningFromPayment) && pendingDownload) {
-                try {
-                    const paymentData = JSON.parse(pendingDownload);
-                    
-                    // Mark as paid (but not yet downloaded)
-                    const paidKey = `paid_${paymentData.songId}`;
-                    localStorage.setItem(paidKey, 'true');
-                    
-                    // Clear pending download
-                    localStorage.removeItem('pendingDownload');
-                    
-                    // Show success message
-                    alert(`Payment successful! You can now download "${paymentData.songTitle}" by clicking the download button.`);
-                    
-                    // Clean URL if it has payment_success parameter
-                    if (paymentSuccess === 'true') {
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    }
-                    
-                } catch (error) {
-                    console.error('Error processing payment return:', error);
-                }
-            }
-        }
-        
-        // Add a manual payment confirmation function for users who completed payment
-        function confirmPaymentManually() {
-            const pendingDownload = localStorage.getItem('pendingDownload');
-            
-            if (pendingDownload) {
-                if (confirm('Did you complete your payment successfully? Click OK if yes, Cancel if no.')) {
-                    try {
-                        const paymentData = JSON.parse(pendingDownload);
-                        
-                        // Mark as paid (but not yet downloaded)
-                        const paidKey = `paid_${paymentData.songId}`;
-                        localStorage.setItem(paidKey, 'true');
-                        
-                        // Clear pending download
-                        localStorage.removeItem('pendingDownload');
-                        
-                        alert(`Payment confirmed! You can now download "${paymentData.songTitle}" by clicking the download button.`);
-                        
-                    } catch (error) {
-                        console.error('Error confirming payment:', error);
-                    }
-                }
-            } else {
-                alert('No pending payment found. Please initiate a download first.');
-            }
         }
         
         // Initialize the music player when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             window.musicPlayer = new ChristianMusicPlayer();
-            checkPaymentReturn();
         });
-        
-        // Check for successful payment return and handle secure download
-        function checkPaymentReturn() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const paymentSuccess = urlParams.get('payment_success');
-            const downloadToken = urlParams.get('download_token');
-            const songId = urlParams.get('song_id');
-            
-            if (paymentSuccess === 'true' && downloadToken) {
-                // Payment was successful, initiate secure download
-                const player = window.musicPlayer;
-                if (player && player.secureDownload) {
-                    // Small delay to ensure page is fully loaded
-                    setTimeout(() => {
-                        alert('Payment successful! Your download will start automatically.');
-                        player.secureDownload(downloadToken);
-                        
-                        // Clean up URL parameters
-                        const newUrl = window.location.pathname;
-                        window.history.replaceState({}, document.title, newUrl);
-                    }, 1000);
-                }
-            } else if (urlParams.get('payment_cancelled') === 'true') {
-                alert('Payment was cancelled. You can try again anytime by clicking the download button.');
-                
-                // Clean up URL parameters
-                const newUrl = window.location.pathname;
-                window.history.replaceState({}, document.title, newUrl);
-            }
-        }
         
         // Enable builder mode for testing
         if (window.location.search.includes('test')) {
@@ -1180,13 +1211,5 @@
         }
     </script>
 <script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script><script>window.onload=function(){var d=document.createElement("div");d.id="aionspaceLoadFinished";document.body.appendChild(d);};</script></body>
-
-
-
-
-
-
-
-
 
 </html>
