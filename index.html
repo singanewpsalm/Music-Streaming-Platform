@@ -956,7 +956,7 @@
                 }
             }
 
-                        async handleBlogSubmit(e) {
+                                    async handleBlogSubmit(e) {
                 e.preventDefault();
                 
                 const title = this.blogTitle.value.trim();
@@ -977,28 +977,34 @@
                 try {
                     let imageUrl = null;
                     
-                    // Upload image if provided
-                    if (imageFile) {
-                        console.log('Uploading image:', imageFile.name);
-                        const fileExt = imageFile.name.split('.').pop().toLowerCase();
-                        const fileName = `blog-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-                        const filePath = `blog-images/${fileName}`;
-                        
-                        const { data: uploadData, error: uploadError } = await this.supabase.storage
-                            .from('songs')
-                            .upload(filePath, imageFile);
-                        
-                        if (uploadError) {
-                            console.error('Image upload error:', uploadError);
-                            throw new Error('Failed to upload image: ' + uploadError.message);
+                    // Upload image if provided (only if Supabase is available)
+                    if (imageFile && this.supabase) {
+                        try {
+                            console.log('Uploading image:', imageFile.name);
+                            const fileExt = imageFile.name.split('.').pop().toLowerCase();
+                            const fileName = `blog-${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+                            const filePath = `blog-images/${fileName}`;
+                            
+                            const { data: uploadData, error: uploadError } = await this.supabase.storage
+                                .from('songs')
+                                .upload(filePath, imageFile);
+                            
+                            if (uploadError) {
+                                console.error('Image upload error:', uploadError);
+                                // Don't throw error, just continue without image
+                                console.log('Continuing without image due to upload error');
+                            } else {
+                                const { data } = this.supabase.storage
+                                    .from('songs')
+                                    .getPublicUrl(filePath);
+                                
+                                imageUrl = data.publicUrl;
+                                console.log('Image uploaded successfully:', imageUrl);
+                            }
+                        } catch (uploadError) {
+                            console.error('Image upload failed:', uploadError);
+                            // Continue without image instead of failing completely
                         }
-                        
-                        const { data } = this.supabase.storage
-                            .from('songs')
-                            .getPublicUrl(filePath);
-                        
-                        imageUrl = data.publicUrl;
-                        console.log('Image uploaded successfully:', imageUrl);
                     }
                     
                     // Create blog post object
@@ -1017,11 +1023,17 @@
                     
                     console.log('Creating blog post:', post);
                     
-                    // Add to beginning of posts array
-                    this.blogPosts.unshift(post);
+                    // Get existing posts from localStorage
+                    const existingPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
                     
-                    // Save to localStorage
-                    localStorage.setItem('blogPosts', JSON.stringify(this.blogPosts));
+                    // Add new post to beginning of array
+                    existingPosts.unshift(post);
+                    
+                    // Save updated posts array
+                    localStorage.setItem('blogPosts', JSON.stringify(existingPosts));
+                    
+                    // Update instance variable
+                    this.blogPosts = existingPosts;
                     
                     // Re-render posts
                     this.renderBlogPosts();
@@ -1029,11 +1041,12 @@
                     // Hide modal
                     this.hideBlogModal();
                     
-                    console.log('Blog post created successfully');
+                    // Show success message
+                    alert('Blog post published successfully!');
                     
                 } catch (error) {
                     console.error('Error creating blog post:', error);
-                    alert(`Error creating blog post: ${error.message}`);
+                    alert(`Error creating blog post: ${error.message || 'Unknown error occurred'}`);
                 } finally {
                     // Restore button state
                     submitBtn.textContent = originalText;
