@@ -1053,14 +1053,16 @@
             }
 
             renderBlogPosts() {
+                console.log('Rendering blog posts, data:', this.blogPostsData);
+                
+                if (!this.blogPostsContainer) {
+                    console.error('Blog posts container not found');
+                    return;
+                }
+                
                 if (this.blogPostsData.length === 0) {
                     this.blogEmptyState.classList.remove('hidden');
                     this.blogPostsContainer.innerHTML = '';
-                    // Show the "Create First Post" button always
-                    const createFirstPostBtn = this.blogEmptyState.querySelector('.newPostTrigger');
-                    if (createFirstPostBtn) {
-                        createFirstPostBtn.style.display = 'inline-block';
-                    }
                     return;
                 }
                 
@@ -1089,7 +1091,7 @@
                 `).join('');
                 
                 // Add delete event listeners
-                this.blogPostsContainer.querySelectorAll('.delete-post-btn').forEach(btn => {
+                document.querySelectorAll('.delete-post-btn').forEach(btn => {
                     btn.addEventListener('click', () => this.deleteBlogPost(btn.dataset.postId));
                 });
             }
